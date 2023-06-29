@@ -1,0 +1,27 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+
+/*::-webkit-scrollbar {*/
+/*    display: none;*/
+/*}*/
+
+/*::-webkit-scrollbar-thumb {*/
+/*    display: none;*/
+/*}*/
+
+/*::-webkit-scrollbar-corner {*/
+/*    display: none;*/
+/*}*/
+
+html {
+    scroll-snap-type: y mandatory;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+section {
+    scroll-snap-align: center;
+    height: 100vh
+}

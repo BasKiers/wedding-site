@@ -4,6 +4,8 @@ import type { ReactElement, ReactNode } from 'react';
 import { DefaultLayout } from '~/components/DefaultLayout';
 import { trpc } from '~/utils/trpc';
 
+import '../app/globals.css';
+
 export type NextPageWithLayout<
   TProps = Record<string, unknown>,
   TInitialProps = TProps,
