@@ -10,9 +10,6 @@ import { useFieldArray, useForm, useWatch } from 'react-hook-form';
 const mbs = {
   width: 2866,
   height: 1612,
-  get ratio() {
-    return this.width / this.height;
-  },
 };
 
 const MenuItem = ({
@@ -84,12 +81,10 @@ const Form = () => {
     control,
     formState: { errors },
   } = useForm();
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    {
-      control,
-      name: 'person',
-    },
-  );
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'person',
+  });
   const persons = useWatch({ name: 'person', control });
 
   const getFormDefaults = () => {
@@ -259,7 +254,7 @@ const Form = () => {
                               <input
                                 className="form-checkbox text-gray-500"
                                 type="checkbox"
-                                checked="checked"
+                                checked={true}
                                 disabled={true}
                               />
                               <span className="mb-2">Groente</span>
@@ -440,6 +435,7 @@ const IndexPage: NextPage = () => {
                 marginLeft: '50%',
                 transform: 'translateX(-50%)',
               }}
+              alt="menu"
               src="/menubar.webp"
             />
           </motion.div>
