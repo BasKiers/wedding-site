@@ -382,26 +382,34 @@ const IndexPage: NextPage = () => {
   });
 
   useEffect(() => {
-    setTimeout(() =>
-      bottomRef.current?.scrollIntoView({
-        behavior: 'smooth',
-      }),
+    setTimeout(
+      () =>
+        bottomRef.current?.scrollIntoView({
+          block: 'end',
+          behavior: 'smooth',
+        }),
+      100,
     );
   }, [page]);
 
   const openPage = (pageName: PageEnum) => () => {
     setPage(pageName);
     if (pageName === page) {
-      bottomRef.current?.scrollIntoView({
-        behavior: 'smooth',
-      });
+      setTimeout(
+        () =>
+          bottomRef.current?.scrollIntoView({
+            block: 'end',
+            behavior: 'smooth',
+          }),
+        100,
+      );
     }
   };
 
   return (
     <>
       <section className="w-screen h-screen">
-        <div className="flex flex-col h-screen place-content-between">
+        <div className="flex flex-col h-full place-content-between">
           <motion.div
             className="flex flex-row place-content-center min-h-[50%] place-items-center my-auto"
             style={{ y: menuY }}
@@ -448,7 +456,7 @@ const IndexPage: NextPage = () => {
         <section ref={bottomRef} className="w-screen h-screen min-h-fit">
           <motion.div
             ref={scheduleRef}
-            className="flex flex-col h-screen place-content-between w-full h-full content-center"
+            className="flex flex-col place-content-between w-full h-full content-center"
             style={{
               paddingTop: '20vh',
               paddingBottom: '10vh',
@@ -460,7 +468,7 @@ const IndexPage: NextPage = () => {
           </motion.div>
           <motion.div
             ref={locationRef}
-            className="flex flex-col h-screen place-content-between w-full h-full px-28"
+            className="flex flex-col place-content-between w-full h-full"
             style={{
               paddingTop: 'calc(20vh + 3rem)',
               y: bottomY,
@@ -471,7 +479,7 @@ const IndexPage: NextPage = () => {
           </motion.div>
           <motion.div
             ref={rsvpRef}
-            className="flex flex-col h-screen place-content-between w-full h-full"
+            className="flex flex-col place-content-between w-full h-full"
             style={{
               paddingTop: '20vh',
               paddingBottom: '10vh',
