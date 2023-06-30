@@ -25,7 +25,7 @@ let locTimeout: any;
 
 const IndexPage: NextPage = () => {
   const size = useWindowSize();
-  const [height, setHeight] = useState(0);
+  const [[height, fromTopHeight], setHeight] = useState([0, 0]);
   const [page, setPage] = useState<PageEnum | undefined>();
   const [loc, setLoc] = useState<0 | 1 | 2 | 3>(0);
   const ref = useRef<any>(null);
@@ -38,14 +38,15 @@ const IndexPage: NextPage = () => {
     const { clientHeight = 0, clientWidth = mbs.width } = ref.current || {};
 
     const imageHeight = Math.min(1, clientWidth / mbs.width) * mbs.height;
-    setHeight(
+    setHeight([
       Math.min(
         -imageHeight +
           clientHeight +
           Math.min(size.height * 0.2, imageHeight * 0.3),
         0,
       ),
-    );
+      size.height - clientHeight,
+    ]);
   }, [size]);
 
   const { scrollYProgress } = useScroll();
@@ -73,7 +74,10 @@ const IndexPage: NextPage = () => {
             block: 'end',
             behavior: 'smooth',
           });
-          locTimeout = setTimeout(() => setLoc(2), 500);
+          locTimeout = setTimeout(
+            () => window.requestAnimationFrame(() => setLoc(2)),
+            500,
+          );
         }
       });
     }, 100);
@@ -82,16 +86,14 @@ const IndexPage: NextPage = () => {
   useEffect(() => handleLocChange(page === undefined), [page]);
 
   const openPage = (pageName: PageEnum | undefined) => () => {
-    console.log('setPage', pageName);
     if (pageName === undefined) {
       setLoc(3);
       handleLocChange(true);
       return;
     }
+    setLoc(1);
     if (pageName === page) {
       handleLocChange(false);
-    } else {
-      setLoc(1);
     }
     setPage(pageName);
   };
@@ -107,10 +109,12 @@ const IndexPage: NextPage = () => {
           Menu
         </span>
       )}
-      <section className={`w-full h-screen ${loc === 2 ? 'nosnap' : 'snap'}`}>
+      <section className={`w-full h-screen ${loc === 2 ? '' : 'snap'}`}>
         <div className="flex flex-col h-full place-content-between">
           <motion.div
-            className="flex flex-row place-content-center min-h-[50%] place-items-center my-auto"
+            className={`flex flex-row place-content-center min-h-[50%] place-items-center my-auto  ${
+              loc === 2 ? 'hidden' : ''
+            }`}
             style={{ y: menuY }}
           >
             <MenuItem
@@ -132,9 +136,10 @@ const IndexPage: NextPage = () => {
                 mbs.width
               }*${mbs.height}*0.6)`,
               y,
+              position: 'relative',
+              top: loc === 2 ? fromTopHeight : '0',
               zIndex: 9001,
             }}
-            onAnimationComplete={console.log}
             ref={ref}
           >
             <img
@@ -152,8 +157,8 @@ const IndexPage: NextPage = () => {
 
       <section
         ref={bottomRef}
-        className={`w-full h-screen min-h-fit ${loc === 0 ? 'nosnap' : 'snap'}`}
-        style={{ marginTop: 'calc(100lvh - 100svh)', height: '100svh' }}
+        className={`w-full h-screen min-h-fit ${loc === 0 ? 'hidden' : 'snap'}`}
+        style={{ marginTop: 'calc(100svh - 100lvh)', height: '100svh' }}
       >
         <motion.div
           ref={scheduleRef}

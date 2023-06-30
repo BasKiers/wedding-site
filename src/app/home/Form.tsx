@@ -36,7 +36,7 @@ const Form: React.FC = () => {
     'mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0';
 
   return (
-    <div className="w-5/6 m-auto">
+    <div className="w-5/6 mx-auto mt-12">
       <form onSubmit={handleSubmit((data) => console.log(data))}>
         <div className="flex flex-row">
           <div className="grow">
@@ -73,11 +73,11 @@ const Form: React.FC = () => {
         {errors.email && (
           <p className="text-xs text-red-600">Het email adres in incorrect.</p>
         )}
-        <div className="overflow-x-scroll snap-x snap-mandatory mt-6">
-          <div className="flex flex-row w-max flex-nowrap">
+        <div className="snap-x snap-mandatory mt-6">
+          <div className="grid grid-flow-col auto-cols-min auto-rows-min w-full">
             {fields.map((field, index, arr) => (
               <div
-                className="snap-center w-96 max-w-full p-4 bg-white border border-gray-200 rounded-lg shadow mr-8 relative sm:p-6"
+                className="snap-center w-96 max-w-full p-4 bg-white border border-gray-200 rounded-lg shadow mr-8 relative sm:p-6 h-min"
                 key={field.id}
               >
                 {(index !== 0 || arr.length > 1) && (
@@ -245,7 +245,7 @@ const Form: React.FC = () => {
                 </ul>
               </div>
             ))}
-            <div className="snap-center w-96 max-w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 flex items-center justify-center">
+            <div className="snap-center w-96 max-w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 flex items-center justify-center h-min">
               <span
                 className="text-9xl"
                 onClick={() => append(getFormDefaults())}
