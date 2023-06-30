@@ -5,332 +5,14 @@ import { motion, useScroll, useTransform, cubicBezier } from 'framer-motion';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 // @ts-ignore
 import { useWindowSize } from '@uidotdev/usehooks';
-import { useFieldArray, useForm, useWatch } from 'react-hook-form';
+import MenuItem from '~/app/home/MenuItem';
+import Programma from '~/app/home/Programma';
+import Map from '~/app/home/Map';
+import Form from '~/app/home/Form';
 
 const mbs = {
   width: 2866,
   height: 1612,
-};
-
-const MenuItem = ({
-  name,
-  icon,
-  onClick,
-}: {
-  name: string;
-  icon: string;
-  onClick: () => any;
-}) => {
-  return (
-    <>
-      <div
-        className="w-1/5 flex flex-col px-8 cursor-pointer"
-        onClick={onClick}
-      >
-        <div className="m-auto py-8 text-7xl">{icon.trim()}</div>
-        <span className="text-center">{name}</span>
-      </div>
-    </>
-  );
-};
-
-const Programma = () => {
-  const tdCls = 'border-b border-slate-100 p-4 pl-8 text-slate-500';
-  return (
-    <>
-      <div className="flex flex-row place-content-center min-h-[50%] place-items-center my-auto">
-        <table className="table-auto border-collapse w-56">
-          <tbody>
-            <tr>
-              <td className={tdCls}>Aanvang</td>
-              <td className={tdCls}>Ceremonie</td>
-              <td className={tdCls}>Receptie</td>
-              <td className={tdCls}>Diner</td>
-              <td className={tdCls}>Avondfeest</td>
-              <td className={tdCls}>Einde</td>
-            </tr>
-            <tr>
-              <td className={tdCls}>13:30</td>
-              <td className={tdCls}>14:00</td>
-              <td className={tdCls}>15:30</td>
-              <td className={tdCls}>18:00</td>
-              <td className={tdCls}>21:00</td>
-              <td className={tdCls}>00:00</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </>
-  );
-};
-
-const Map = () => (
-  <iframe
-    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2419.03561641692!2d6.998176877308135!3d52.67739462456392!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47b7ef9909aa8249%3A0xd191032d0fd5e83!2sRestaurant%20Wollegras!5e0!3m2!1sen!2snl!4v1688042566546!5m2!1sen!2snl"
-    style={{ border: 0, width: '100%', height: '100%' }}
-    allowFullScreen={false}
-    loading="lazy"
-    referrerPolicy="no-referrer-when-downgrade"
-  ></iframe>
-);
-
-const Form = () => {
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm();
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'person',
-  });
-  const persons = useWatch({ name: 'person', control });
-
-  const getFormDefaults = () => {
-    const { rsvpCeremony, rsvpReception, rsvpDinner, rsvpParty } =
-      persons?.at?.(-1) ?? {};
-    return {
-      rsvpCeremony,
-      rsvpReception,
-      rsvpDinner,
-      rsvpParty,
-      dietMeat: true,
-      dietFish: true,
-    };
-  };
-  if (fields.length === 0) {
-    append(getFormDefaults());
-  }
-
-  console.log(persons);
-
-  const inputCls =
-    'mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0';
-
-  return (
-    <div className="w-5/6 m-auto">
-      <form onSubmit={handleSubmit((data) => console.log(data))}>
-        <div className="flex flex-row">
-          <div className="grow">
-            <div className="md:w-1/3">
-              <label
-                className="block text-gray-500 font-bold mb-1 md:mb-0 pr-4"
-                htmlFor="email"
-              >
-                Email
-              </label>
-            </div>
-            <div className="max-w-xl">
-              <input
-                type="email"
-                id="email"
-                placeholder="mijn@email.nl"
-                className={inputCls}
-                {...register('email', {
-                  required: true,
-                  pattern:
-                    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-                })}
-              />
-            </div>
-          </div>
-          <div className="mx-6 flex items-end">
-            <input
-              className="shadow bg-blue-500 cursor-pointer hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
-              type="submit"
-              value="Opslaan"
-            />
-          </div>
-        </div>
-        {errors.email && (
-          <p className="text-xs text-red-600">Het email adres in incorrect.</p>
-        )}
-        <div className="overflow-x-scroll snap-x snap-mandatory mt-6">
-          <div className="flex flex-row w-max flex-nowrap">
-            {fields.map((field, index, arr) => (
-              <div
-                className="snap-center w-96 max-w-full p-4 bg-white border border-gray-200 rounded-lg shadow mr-8 relative sm:p-6"
-                key={field.id}
-              >
-                {(index !== 0 || arr.length > 1) && (
-                  <span
-                    className="absolute right-7 cursor-pointer"
-                    onClick={() => remove(index)}
-                  >
-                    🗑️
-                  </span>
-                )}
-                <ul className="my-4 space-y-3">
-                  <li>
-                    <div className="mb-6">
-                      <div className="">
-                        <label
-                          className="block text-gray-500 font-bold mb-1 md:mb-0 pr-4"
-                          htmlFor="name"
-                        >
-                          Naam
-                        </label>
-                      </div>
-                      <div>
-                        <input
-                          className={inputCls}
-                          type="text"
-                          id="name"
-                          {...register(`person.${index}.name` as const, {
-                            required: true,
-                          })}
-                        />
-                        {/* @ts-ignore */}
-                        {errors.person?.[index]?.name && (
-                          <p className="text-xs text-red-600">
-                            Een naam is verplicht.
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="mb-6 flex flex-col">
-                      <div className="">
-                        <label className="block text-gray-500 font-bold mb-1 md:mb-0 pr-4">
-                          Is aanwezig bij
-                        </label>
-                      </div>
-                      <label className="inline-flex items-center">
-                        <input
-                          className="form-checkbox"
-                          type="checkbox"
-                          {...register(`person.${index}.rsvpCeremony` as const)}
-                        />
-                        <span className="ml-2">Ceremonie</span>
-                      </label>
-                      <label className="inline-flex items-center">
-                        <input
-                          className="form-checkbox"
-                          type="checkbox"
-                          {...register(
-                            `person.${index}.rsvpReception` as const,
-                          )}
-                        />
-                        <span className="ml-2">Receptie</span>
-                      </label>
-                      <label className="inline-flex items-center">
-                        <input
-                          className="form-checkbox"
-                          type="checkbox"
-                          {...register(`person.${index}.rsvpDinner` as const)}
-                        />
-                        <span className="ml-2">Diner</span>
-                      </label>
-                      {persons?.[index]?.rsvpDinner && (
-                        <div className="my-2 ml-4">
-                          <div className="">
-                            <label className="block text-gray-500 font-bold mb-1 md:mb-0 pr-4">
-                              Dieetwensen
-                            </label>
-                          </div>
-                          <div className="flex flex-row place-content-between mb-2">
-                            <label className="inline-flex items-center flex-col-reverse">
-                              <input
-                                className="form-checkbox"
-                                type="checkbox"
-                                {...register(
-                                  `person.${index}.dietMeat` as const,
-                                )}
-                              />
-                              <span className="mb-2">Vlees</span>
-                            </label>
-                            <label className="inline-flex items-center flex-col-reverse">
-                              <input
-                                className="form-checkbox"
-                                type="checkbox"
-                                {...register(
-                                  `person.${index}.dietFish` as const,
-                                )}
-                              />
-                              <span className="mb-2">Vis</span>
-                            </label>
-                            <label className="inline-flex items-center flex-col-reverse">
-                              <input
-                                className="form-checkbox text-gray-500"
-                                type="checkbox"
-                                checked={true}
-                                disabled={true}
-                              />
-                              <span className="mb-2">Groente</span>
-                            </label>
-                            <label className="inline-flex items-center flex-col-reverse">
-                              <input
-                                className="form-checkbox"
-                                type="checkbox"
-                                {...register(
-                                  `person.${index}.dietAlt` as const,
-                                )}
-                              />
-                              <span className="mb-2">Anders</span>
-                            </label>
-                          </div>
-                          {persons?.[index]?.dietAlt && (
-                            <div>
-                              <textarea
-                                className={inputCls}
-                                id="dietAltText"
-                                {...register(
-                                  `person.${index}.dietAltText` as const,
-                                )}
-                              />
-                            </div>
-                          )}
-                        </div>
-                      )}
-                      <label className="inline-flex items-center">
-                        <input
-                          className="form-checkbox"
-                          type="checkbox"
-                          {...register(`person.${index}.rsvpParty` as const, {
-                            value: persons?.[index - 1]?.rsvpParty,
-                          })}
-                        />
-                        <span className="ml-2">Avondfeest</span>
-                      </label>
-                    </div>
-
-                    <div className="mb-6">
-                      <div className="">
-                        <label
-                          className="block text-gray-500 font-bold mb-1 md:mb-0 pr-4"
-                          htmlFor="name"
-                        >
-                          Eventuele bijzonderheden
-                        </label>
-                      </div>
-                      <div>
-                        <textarea
-                          className={inputCls}
-                          id="remark"
-                          {...register(`person.${index}.remark` as const, {
-                            required: true,
-                          })}
-                        />
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            ))}
-            <div className="snap-center w-96 max-w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 flex items-center justify-center">
-              <span
-                className="text-9xl"
-                onClick={() => append(getFormDefaults())}
-              >
-                ⊕
-              </span>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-  );
 };
 
 enum PageEnum {
@@ -377,65 +59,41 @@ const IndexPage: NextPage = () => {
     // ease: cubicBezier(0.68, 0.08, 0.41, 0.95),
   });
 
-  useEffect(() => {
+  const handleLocChange = (scrollToTop: boolean) => {
     clearTimeout(locTimeout);
-    setTimeout(
-      () =>
-        window.requestAnimationFrame(() => {
-          if (page === undefined) {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            locTimeout = setTimeout(
-              () => window.requestAnimationFrame(() => setLoc(0)),
-              500,
-            );
-          } else {
-            bottomRef.current?.scrollIntoView({
-              block: 'end',
-              behavior: 'smooth',
-            });
-            locTimeout = setTimeout(() => setLoc(2), 500);
-          }
-        }),
-      100,
-    );
-  }, [page]);
+    setTimeout(() => {
+      window.requestAnimationFrame(() => {
+        if (scrollToTop) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          locTimeout = setTimeout(() => {
+            window.requestAnimationFrame(() => setLoc(0));
+          }, 500);
+        } else {
+          bottomRef.current?.scrollIntoView({
+            block: 'end',
+            behavior: 'smooth',
+          });
+          locTimeout = setTimeout(() => setLoc(2), 500);
+        }
+      });
+    }, 100);
+  };
+
+  useEffect(() => handleLocChange(page === undefined), [page]);
 
   const openPage = (pageName: PageEnum | undefined) => () => {
     console.log('setPage', pageName);
     if (pageName === undefined) {
       setLoc(3);
-      setTimeout(
-        () =>
-          window.requestAnimationFrame(() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            locTimeout = setTimeout(
-              () => window.requestAnimationFrame(() => setLoc(0)),
-              500,
-            );
-          }),
-        100,
-      );
+      handleLocChange(true);
       return;
     }
-    setLoc(1);
-    setPage(pageName);
     if (pageName === page) {
-      clearTimeout(locTimeout);
-      setTimeout(
-        () =>
-          window.requestAnimationFrame(() => {
-            bottomRef.current?.scrollIntoView({
-              block: 'end',
-              behavior: 'smooth',
-            });
-            locTimeout = setTimeout(
-              () => window.requestAnimationFrame(() => setLoc(2)),
-              500,
-            );
-          }),
-        100,
-      );
+      handleLocChange(false);
+    } else {
+      setLoc(1);
     }
+    setPage(pageName);
   };
 
   return (
@@ -495,6 +153,7 @@ const IndexPage: NextPage = () => {
       <section
         ref={bottomRef}
         className={`w-full h-screen min-h-fit ${loc === 0 ? 'nosnap' : 'snap'}`}
+        style={{ marginTop: 'calc(100lvh - 100svh)', height: '100svh' }}
       >
         <motion.div
           ref={scheduleRef}
