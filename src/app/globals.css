@@ -6,11 +6,11 @@
 html {
     scroll-snap-type: y mandatory;
 }
- body{
+
+body {
      overscroll-behavior: none;
  }
 
-section {
+.snap {
     scroll-snap-align: end;
-    height: 100vh
 }

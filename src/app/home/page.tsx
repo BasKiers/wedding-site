@@ -339,10 +339,13 @@ enum PageEnum {
   RSVP,
 }
 
+let locTimeout: any;
+
 const IndexPage: NextPage = () => {
   const size = useWindowSize();
   const [height, setHeight] = useState(0);
   const [page, setPage] = useState<PageEnum | undefined>();
+  const [loc, setLoc] = useState<0 | 1 | 2 | 3>(0);
   const ref = useRef<any>(null);
   const bottomRef = useRef<any>(null);
   const scheduleRef = useRef<any>(null);
@@ -352,14 +355,7 @@ const IndexPage: NextPage = () => {
   useLayoutEffect(() => {
     const { clientHeight = 0, clientWidth = mbs.width } = ref.current || {};
 
-    console.log(clientWidth);
     const imageHeight = Math.min(1, clientWidth / mbs.width) * mbs.height;
-    console.log(
-      clientHeight,
-      imageHeight,
-      size.height * 0.3,
-      imageHeight * 0.4,
-    );
     setHeight(
       Math.min(
         -imageHeight +
@@ -382,24 +378,60 @@ const IndexPage: NextPage = () => {
   });
 
   useEffect(() => {
+    clearTimeout(locTimeout);
     setTimeout(
       () =>
-        bottomRef.current?.scrollIntoView({
-          block: 'end',
-          behavior: 'smooth',
+        window.requestAnimationFrame(() => {
+          if (page === undefined) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            locTimeout = setTimeout(
+              () => window.requestAnimationFrame(() => setLoc(0)),
+              500,
+            );
+          } else {
+            bottomRef.current?.scrollIntoView({
+              block: 'end',
+              behavior: 'smooth',
+            });
+            locTimeout = setTimeout(() => setLoc(2), 500);
+          }
         }),
       100,
     );
   }, [page]);
 
-  const openPage = (pageName: PageEnum) => () => {
-    setPage(pageName);
-    if (pageName === page) {
+  const openPage = (pageName: PageEnum | undefined) => () => {
+    console.log('setPage', pageName);
+    if (pageName === undefined) {
+      setLoc(3);
       setTimeout(
         () =>
-          bottomRef.current?.scrollIntoView({
-            block: 'end',
-            behavior: 'smooth',
+          window.requestAnimationFrame(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            locTimeout = setTimeout(
+              () => window.requestAnimationFrame(() => setLoc(0)),
+              500,
+            );
+          }),
+        100,
+      );
+      return;
+    }
+    setLoc(1);
+    setPage(pageName);
+    if (pageName === page) {
+      clearTimeout(locTimeout);
+      setTimeout(
+        () =>
+          window.requestAnimationFrame(() => {
+            bottomRef.current?.scrollIntoView({
+              block: 'end',
+              behavior: 'smooth',
+            });
+            locTimeout = setTimeout(
+              () => window.requestAnimationFrame(() => setLoc(2)),
+              500,
+            );
           }),
         100,
       );
@@ -408,7 +440,16 @@ const IndexPage: NextPage = () => {
 
   return (
     <>
-      <section className="w-screen h-screen">
+      {loc !== 0 && (
+        <span
+          className="sticky top-0"
+          style={{ zIndex: 9002 }}
+          onClick={openPage(undefined)}
+        >
+          Menu
+        </span>
+      )}
+      <section className={`w-full h-screen ${loc === 2 ? 'nosnap' : 'snap'}`}>
         <div className="flex flex-col h-full place-content-between">
           <motion.div
             className="flex flex-row place-content-center min-h-[50%] place-items-center my-auto"
@@ -435,6 +476,7 @@ const IndexPage: NextPage = () => {
               y,
               zIndex: 9001,
             }}
+            onAnimationComplete={console.log}
             ref={ref}
           >
             <img
@@ -450,47 +492,46 @@ const IndexPage: NextPage = () => {
         </div>
       </section>
 
-      {page === undefined ? (
-        <div className="w-screen h-screen" />
-      ) : (
-        <section ref={bottomRef} className="w-screen h-screen min-h-fit">
-          <motion.div
-            ref={scheduleRef}
-            className="flex flex-col place-content-between w-full h-full content-center"
-            style={{
-              paddingTop: '20vh',
-              paddingBottom: '10vh',
-              y: bottomY,
-              display: page === PageEnum.SCHEDULE ? 'flex' : 'none',
-            }}
-          >
-            <Programma />
-          </motion.div>
-          <motion.div
-            ref={locationRef}
-            className="flex flex-col place-content-between w-full h-full"
-            style={{
-              paddingTop: 'calc(20vh + 3rem)',
-              y: bottomY,
-              display: page === PageEnum.LOCATION ? 'flex' : 'none',
-            }}
-          >
-            <Map />
-          </motion.div>
-          <motion.div
-            ref={rsvpRef}
-            className="flex flex-col place-content-between w-full h-full"
-            style={{
-              paddingTop: '20vh',
-              paddingBottom: '10vh',
-              y: bottomY,
-              display: page === PageEnum.RSVP ? 'flex' : 'none',
-            }}
-          >
-            <Form />
-          </motion.div>
-        </section>
-      )}
+      <section
+        ref={bottomRef}
+        className={`w-full h-screen min-h-fit ${loc === 0 ? 'nosnap' : 'snap'}`}
+      >
+        <motion.div
+          ref={scheduleRef}
+          className="flex flex-col place-content-between w-full h-full content-center"
+          style={{
+            paddingTop: '20vh',
+            paddingBottom: '10vh',
+            y: bottomY,
+            display: page === PageEnum.SCHEDULE ? 'flex' : 'none',
+          }}
+        >
+          <Programma />
+        </motion.div>
+        <motion.div
+          ref={locationRef}
+          className="flex flex-col place-content-between w-full h-full"
+          style={{
+            paddingTop: 'calc(20vh + 3rem)',
+            y: bottomY,
+            display: page === PageEnum.LOCATION ? 'flex' : 'none',
+          }}
+        >
+          <Map />
+        </motion.div>
+        <motion.div
+          ref={rsvpRef}
+          className="flex flex-col place-content-between w-full h-full"
+          style={{
+            paddingTop: '20vh',
+            paddingBottom: '10vh',
+            y: bottomY,
+            display: page === PageEnum.RSVP ? 'flex' : 'none',
+          }}
+        >
+          <Form />
+        </motion.div>
+      </section>
     </>
   );
 };
