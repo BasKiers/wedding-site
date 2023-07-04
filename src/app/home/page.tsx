@@ -25,7 +25,11 @@ let locTimeout: any;
 
 const IndexPage: NextPage = () => {
   const size = useWindowSize();
-  const [[height, fromTopHeight], setHeight] = useState([0, 0]);
+  const [[height, fromTopHeight, animateMenuBar], setHeight] = useState([
+    0,
+    0,
+    {},
+  ]);
   const [page, setPage] = useState<PageEnum | undefined>();
   const [loc, setLoc] = useState<0 | 1 | 2 | 3>(0);
   const ref = useRef<any>(null);
@@ -35,6 +39,9 @@ const IndexPage: NextPage = () => {
   const rsvpRef = useRef<any>(null);
 
   useLayoutEffect(() => {
+    if (!ref.current?.clientHeight) {
+      return;
+    }
     const { clientHeight = 0, clientWidth = mbs.width } = ref.current || {};
 
     const imageHeight = Math.min(1, clientWidth / mbs.width) * mbs.height;
@@ -46,13 +53,27 @@ const IndexPage: NextPage = () => {
         0,
       ),
       size.height - clientHeight,
+      {
+        bottom: {
+          y: -clientHeight,
+        },
+        top: {
+          y: height,
+        },
+      },
     ]);
-  }, [size]);
+  }, [size, loc]);
 
   const { scrollYProgress } = useScroll();
-  const y = useTransform(scrollYProgress, [0, 0.9], [0, height], {
-    ease: cubicBezier(0.68, 0.08, 0.41, 0.95),
-  });
+  // const animateMenuBar = {
+  //   bottom: {
+  //     y: -ref.current?.clientHeight ?? 0,
+  //   },
+  //   top: {
+  //     y: height,
+  //   },
+  // };
+  console.log(animateMenuBar);
   const menuY = useTransform(scrollYProgress, [0, 0.9], ['0vh', '45vh'], {
     // ease: cubicBezier(0.68, 0.08, 0.41, 0.95),
   });
@@ -100,16 +121,7 @@ const IndexPage: NextPage = () => {
 
   return (
     <>
-      {loc !== 0 && (
-        <span
-          className="sticky top-0"
-          style={{ zIndex: 9002 }}
-          onClick={openPage(undefined)}
-        >
-          Menu
-        </span>
-      )}
-      <section className={`w-full h-screen ${loc === 2 ? '' : 'snap'}`}>
+      <section className={`w-full h-screen ${loc === 2 ? 'hidden' : 'snap'}`}>
         <div className="flex flex-col h-full place-content-between">
           <motion.div
             className={`flex flex-row place-content-center min-h-[50%] place-items-center my-auto  ${
@@ -129,31 +141,49 @@ const IndexPage: NextPage = () => {
             />
             <MenuItem name="RSVP" icon="🖊️" onClick={openPage(PageEnum.RSVP)} />
           </motion.div>
-          <motion.div
+          <div
             className="w-full flex-grow"
             style={{
               maxHeight: `min(45vh, ${Math.round(mbs.height * 0.6)}px, 100vw/${
                 mbs.width
               }*${mbs.height}*0.6)`,
-              y,
-              position: 'relative',
-              top: loc === 2 ? fromTopHeight : '0',
               zIndex: 9001,
             }}
             ref={ref}
-          >
-            <img
-              style={{
-                maxWidth: '100%',
-                marginLeft: '50%',
-                transform: 'translateX(-50%)',
-              }}
-              alt="menu"
-              src="/menubar.webp"
-            />
-          </motion.div>
+          ></div>
         </div>
       </section>
+      <motion.div
+        className="w-full"
+        variants={animateMenuBar}
+        transition={{ delay: 0.5 }}
+        initial="bottom"
+        animate={loc === 0 || loc === 3 ? 'bottom' : 'top'}
+        style={{
+          maxHeight: `min(45vh, ${Math.round(mbs.height * 0.6)}px, 100vw/${
+            mbs.width
+          }*${mbs.height}*0.6)`,
+          position: 'relative',
+          zIndex: 9001,
+        }}
+      >
+        <img
+          style={{
+            maxWidth: '100%',
+            marginLeft: '50%',
+            transform: 'translateX(-50%)',
+          }}
+          alt="menu"
+          src="/menubar.webp"
+        />
+      </motion.div>
+      <span
+        className="sticky top-0 font-normal text-xl block m-auto w-min"
+        style={{ zIndex: 9002 }}
+        onClick={openPage(undefined)}
+      >
+        Menu
+      </span>
 
       <section
         ref={bottomRef}
