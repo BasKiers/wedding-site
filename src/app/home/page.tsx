@@ -9,8 +9,11 @@ import MenuItem from '~/app/home/MenuItem';
 import Programma from '~/app/home/Programma';
 import Map from '~/app/home/Map';
 import Form from '~/app/home/Form';
+import { trpc } from '~/utils/trpc';
 
-const mbs = {
+const SCROLL_DELAY = 600;
+
+const MENU_BAR_DIMENSIONS = {
   width: 2866,
   height: 1612,
 };
@@ -42,9 +45,12 @@ const IndexPage: NextPage = () => {
     if (!ref.current?.clientHeight) {
       return;
     }
-    const { clientHeight = 0, clientWidth = mbs.width } = ref.current || {};
+    const { clientHeight = 0, clientWidth = MENU_BAR_DIMENSIONS.width } =
+      ref.current || {};
 
-    const imageHeight = Math.min(1, clientWidth / mbs.width) * mbs.height;
+    const imageHeight =
+      Math.min(1, clientWidth / MENU_BAR_DIMENSIONS.width) *
+      MENU_BAR_DIMENSIONS.height;
     setHeight([
       Math.min(
         -imageHeight +
@@ -58,7 +64,7 @@ const IndexPage: NextPage = () => {
           y: -clientHeight,
         },
         top: {
-          y: height,
+          y: -clientHeight,
         },
       },
     ]);
@@ -73,7 +79,6 @@ const IndexPage: NextPage = () => {
   //     y: height,
   //   },
   // };
-  console.log(animateMenuBar);
   const menuY = useTransform(scrollYProgress, [0, 0.9], ['0vh', '45vh'], {
     // ease: cubicBezier(0.68, 0.08, 0.41, 0.95),
   });
@@ -89,7 +94,7 @@ const IndexPage: NextPage = () => {
           window.scrollTo({ top: 0, behavior: 'smooth' });
           locTimeout = setTimeout(() => {
             window.requestAnimationFrame(() => setLoc(0));
-          }, 500);
+          }, SCROLL_DELAY);
         } else {
           bottomRef.current?.scrollIntoView({
             block: 'end',
@@ -97,7 +102,7 @@ const IndexPage: NextPage = () => {
           });
           locTimeout = setTimeout(
             () => window.requestAnimationFrame(() => setLoc(2)),
-            500,
+            SCROLL_DELAY,
           );
         }
       });
@@ -127,7 +132,7 @@ const IndexPage: NextPage = () => {
             className={`flex flex-row place-content-center min-h-[50%] place-items-center my-auto  ${
               loc === 2 ? 'hidden' : ''
             }`}
-            style={{ y: menuY }}
+            style={{ y: loc === 0 ? 0 : menuY }}
           >
             <MenuItem
               name="Programma"
@@ -144,41 +149,54 @@ const IndexPage: NextPage = () => {
           <div
             className="w-full flex-grow"
             style={{
-              maxHeight: `min(45vh, ${Math.round(mbs.height * 0.6)}px, 100vw/${
-                mbs.width
-              }*${mbs.height}*0.6)`,
+              maxHeight: `min(45vh, ${Math.round(
+                MENU_BAR_DIMENSIONS.height * 0.6,
+              )}px, 100vw/${MENU_BAR_DIMENSIONS.width}*${
+                MENU_BAR_DIMENSIONS.height
+              }*0.6)`,
               zIndex: 9001,
             }}
             ref={ref}
           ></div>
         </div>
       </section>
-      <motion.div
-        className="w-full"
-        variants={animateMenuBar}
-        transition={{ delay: 0.5 }}
-        initial="bottom"
-        animate={loc === 0 || loc === 3 ? 'bottom' : 'top'}
-        style={{
-          maxHeight: `min(45vh, ${Math.round(mbs.height * 0.6)}px, 100vw/${
-            mbs.width
-          }*${mbs.height}*0.6)`,
-          position: 'relative',
-          zIndex: 9001,
-        }}
-      >
-        <img
-          style={{
-            maxWidth: '100%',
-            marginLeft: '50%',
-            transform: 'translateX(-50%)',
+      <div className="h-0">
+        <motion.div
+          className="w-full"
+          variants={animateMenuBar}
+          transition={{
+            type: 'tween',
+            delay: SCROLL_DELAY / 1.5 / 1000,
+            duration: SCROLL_DELAY / 1000,
           }}
-          alt="menu"
-          src="/menubar.webp"
-        />
-      </motion.div>
+          initial="bottom"
+          animate="bottom"
+          // animate={loc === 0 || loc === 3 ? 'bottom' : 'top'}
+          style={{
+            maxHeight: `min(45vh, ${Math.round(
+              MENU_BAR_DIMENSIONS.height * 0.6,
+            )}px, 100vw/${MENU_BAR_DIMENSIONS.width}*${
+              MENU_BAR_DIMENSIONS.height
+            }*0.6)`,
+            position: 'relative',
+            zIndex: 9001,
+          }}
+        >
+          <img
+            style={{
+              maxWidth: '100%',
+              marginLeft: '50%',
+              transform: 'translateX(-50%)',
+            }}
+            alt="menu"
+            src="/menubar.webp"
+          />
+        </motion.div>
+      </div>
       <span
-        className="sticky top-0 font-normal text-xl block m-auto w-min"
+        className={`sticky top-0 font-normal text-xl block m-auto w-min h-0 ${
+          loc === 0 ? 'hidden' : ''
+        }`}
         style={{ zIndex: 9002 }}
         onClick={openPage(undefined)}
       >
@@ -196,7 +214,7 @@ const IndexPage: NextPage = () => {
           style={{
             paddingTop: '20vh',
             paddingBottom: '10vh',
-            y: bottomY,
+            y: loc === 2 ? 0 : bottomY,
             display: page === PageEnum.SCHEDULE ? 'flex' : 'none',
           }}
         >
@@ -207,7 +225,7 @@ const IndexPage: NextPage = () => {
           className="flex flex-col place-content-between w-full h-full"
           style={{
             paddingTop: 'calc(20vh + 3rem)',
-            y: bottomY,
+            y: loc === 2 ? 0 : bottomY,
             display: page === PageEnum.LOCATION ? 'flex' : 'none',
           }}
         >
@@ -219,7 +237,7 @@ const IndexPage: NextPage = () => {
           style={{
             paddingTop: '20vh',
             paddingBottom: '10vh',
-            y: bottomY,
+            y: loc === 2 ? 0 : bottomY,
             display: page === PageEnum.RSVP ? 'flex' : 'none',
           }}
         >
@@ -230,4 +248,4 @@ const IndexPage: NextPage = () => {
   );
 };
 
-export default IndexPage;
+export default trpc.withTRPC(IndexPage);

@@ -1,23 +1,92 @@
-import React from 'react';
-import { useFieldArray, useForm, useWatch } from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  useFieldArray,
+  useForm,
+  UseFormProps,
+  useWatch,
+} from 'react-hook-form';
+import { z } from 'zod';
+import { trpc } from '~/utils/trpc';
+
+export const validationSchema = z.object({
+  id: z.string().uuid().optional().or(z.literal('')),
+  email: z.string().email().min(1).max(1000),
+  person: z
+    .array(
+      z.object({
+        name: z.string().min(1).max(1000),
+        dietAlt: z.boolean().default(false),
+        rsvpCeremony: z.boolean().default(false),
+        rsvpReception: z.boolean().default(false),
+        rsvpDinner: z.boolean().default(false),
+        rsvpParty: z.boolean().default(false),
+        dietMeat: z.boolean().default(false),
+        dietFish: z.boolean().default(false),
+        remark: z.string().max(10000).default(''),
+        dietAltText: z.string().max(10000).default(''),
+      }),
+    )
+    .max(10),
+});
+
+function useZodForm<TSchema extends z.ZodType>(
+  props: Omit<UseFormProps<TSchema['_input']>, 'resolver'> & {
+    schema: TSchema;
+  },
+) {
+  const form = useForm<TSchema['_input']>({
+    ...props,
+    resolver: zodResolver(props.schema, undefined),
+  });
+
+  return form;
+}
 
 const Form: React.FC = () => {
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm();
+  const [id, setId] = useState(() => {
+    const saved = localStorage.getItem('rsvp');
+    return (saved && JSON.parse(saved).id) || '';
+  });
+
+  useEffect(() => {
+    if (id) {
+      localStorage.setItem('rsvp', JSON.stringify({ id }));
+    }
+  }, [id]);
+
+  const utils = trpc.useContext().form;
+  const rsvp = trpc.form.byId.useQuery({ id }, { enabled: Boolean(id) });
+  console.log('Query', rsvp.data);
+
+  const mutation = trpc.form.upsert.useMutation({
+    onSuccess: async () => {
+      await utils.list.invalidate();
+    },
+  });
+
+  const { register, reset, handleSubmit, control, formState } = useZodForm({
+    schema: validationSchema,
+  });
+  const { errors } = formState;
+  const isLoading = formState.isLoading || (id && rsvp.isLoading);
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'person',
   });
   const persons = useWatch({ name: 'person', control });
 
+  useEffect(() => {
+    if (rsvp.data) {
+      reset(rsvp.data);
+    }
+  }, [rsvp.data]);
+
   const getFormDefaults = () => {
     const { rsvpCeremony, rsvpReception, rsvpDinner, rsvpParty } =
       persons?.at?.(-1) ?? {};
     return {
+      name: '',
       rsvpCeremony,
       rsvpReception,
       rsvpDinner,
@@ -30,14 +99,21 @@ const Form: React.FC = () => {
     append(getFormDefaults());
   }
 
-  console.log(persons);
+  formState;
 
   const inputCls =
     'mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0';
 
   return (
     <div className="w-5/6 mx-auto mt-12">
-      <form onSubmit={handleSubmit((data) => console.log(data))}>
+      <form
+        onSubmit={handleSubmit(async (data) => {
+          const mutationResult = await mutation.mutateAsync(data);
+          setId(mutationResult.id);
+          return new Promise((resolve) => setTimeout(resolve, 10000));
+        })}
+      >
+        <input type="hidden" id="id" {...register('id')} />
         <div className="flex flex-row">
           <div className="grow">
             <div className="md:w-1/3">
@@ -54,19 +130,20 @@ const Form: React.FC = () => {
                 id="email"
                 placeholder="mijn@email.nl"
                 className={inputCls}
-                {...register('email', {
-                  required: true,
-                  pattern:
-                    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-                })}
+                {...register('email')}
               />
             </div>
           </div>
           <div className="mx-6 flex items-end">
             <input
-              className="shadow bg-blue-500 cursor-pointer hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+              className={`shadow ${
+                isLoading
+                  ? 'bg-gray-500'
+                  : 'bg-blue-500 hover:bg-blue-400 cursor-pointer'
+              }  focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded`}
               type="submit"
               value="Opslaan"
+              disabled={isLoading}
             />
           </div>
         </div>
@@ -104,9 +181,7 @@ const Form: React.FC = () => {
                           className={inputCls}
                           type="text"
                           id="name"
-                          {...register(`person.${index}.name` as const, {
-                            required: true,
-                          })}
+                          {...register(`person.${index}.name` as const)}
                         />
                         {/* @ts-ignore */}
                         {errors.person?.[index]?.name && (
@@ -214,9 +289,7 @@ const Form: React.FC = () => {
                         <input
                           className="form-checkbox"
                           type="checkbox"
-                          {...register(`person.${index}.rsvpParty` as const, {
-                            value: persons?.[index - 1]?.rsvpParty,
-                          })}
+                          {...register(`person.${index}.rsvpParty` as const)}
                         />
                         <span className="ml-2">Avondfeest</span>
                       </label>
@@ -235,9 +308,7 @@ const Form: React.FC = () => {
                         <textarea
                           className={inputCls}
                           id="remark"
-                          {...register(`person.${index}.remark` as const, {
-                            required: true,
-                          })}
+                          {...register(`person.${index}.remark` as const)}
                         />
                       </div>
                     </div>

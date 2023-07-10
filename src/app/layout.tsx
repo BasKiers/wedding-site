@@ -1,5 +1,6 @@
 // These styles apply to every route in the application
 import './globals.css';
+import { StrictMode } from 'react';
 
 export const metadata = {
   title: 'Create Next App',
@@ -12,8 +13,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
+    <StrictMode>
+      <html lang="en">
+        <body>{children}</body>
+      </html>
+    </StrictMode>
   );
 }
