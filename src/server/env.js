@@ -10,6 +10,11 @@ const { z } = require('zod');
 const envSchema = z.object({
   DATABASE_URL: z.string().url(),
   NODE_ENV: z.enum(['development', 'test', 'production']),
+  SMTP_HOST: z.string(),
+  SMTP_PASSWORD: z.string(),
+  SMTP_PORT: z.preprocess((x) => Number(x), z.number()),
+  SMTP_SENDER: z.string().email(),
+  SMTP_USERNAME: z.string().email(),
 });
 
 const env = envSchema.safeParse(process.env);

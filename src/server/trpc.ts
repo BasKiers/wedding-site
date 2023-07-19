@@ -11,6 +11,7 @@
 import { Context } from './context';
 import { initTRPC } from '@trpc/server';
 import superjson from 'superjson';
+import '@total-typescript/ts-reset';
 
 const t = initTRPC.context<Context>().create({
   /**

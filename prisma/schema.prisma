@@ -34,8 +34,8 @@ model RSVPPerson {
     rsvpParty      Boolean
     dietMeat       Boolean
     dietFish       Boolean
-    remark         Text
-    dietAltText    Text
+    remark         String
+    dietAltText    String
 
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
@@ -44,6 +44,7 @@ model RSVPPerson {
 model RSVPSubmission {
   id      String     @id @default(uuid())
   email   String
+  type    Int
   persons RSVPPerson[]
 
   // To return `Date`s intact through the API we use transformers

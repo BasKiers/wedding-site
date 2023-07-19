@@ -21,3 +21,36 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 }
+
+model RSVPPerson {
+    id             String @id @default(uuid())
+    submissionId   String
+    submission     RSVPSubmission @relation(fields: [submissionId], references: [id])
+    name           String
+    dietAlt        Boolean
+    rsvpCeremony   Boolean
+    rsvpReception  Boolean
+    rsvpDinner     Boolean
+    rsvpParty      Boolean
+    dietMeat       Boolean
+    dietFish       Boolean
+    remark         String
+    dietAltText    String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+}
+
+model RSVPSubmission {
+  id      String     @id @default(uuid())
+  email   String
+  type    Int
+  persons RSVPPerson[]
+
+  // To return `Date`s intact through the API we use transformers
+  // https://trpc.io/docs/data-transformers
+  // This is unique so it can be used for cursor-based pagination
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+

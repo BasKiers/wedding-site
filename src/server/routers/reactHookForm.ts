@@ -3,52 +3,45 @@ import { publicProcedure, router } from '~/server/trpc';
 import { v4 as uuid } from 'uuid';
 import { z } from 'zod';
 import { Prisma } from '@prisma/client';
+import { prisma } from '~/server/prisma';
+import { sendRSVPMail } from '~/server/mailer';
 
-const defaultRSVPSelect = Prisma.validator<Prisma.PostSelect>()({
-  id: true,
-  email: true,
-  person: true,
-});
-
-const items: Map<string, z.infer<typeof validationSchema>> = new Map([
-  [
-    '794a84e0-32a6-46e4-9c2c-a7bceb292e39',
-    {
-      id: '794a84e0-32a6-46e4-9c2c-a7bceb292e39',
-      email: 'kiers.bas@gmail.com',
-      person: [
-        {
-          name: 'Bas',
-          dietAlt: true,
-          rsvpCeremony: true,
-          rsvpReception: true,
-          rsvpDinner: true,
-          rsvpParty: true,
-          dietMeat: true,
-          dietFish: true,
-          remark: 'dsfasdfas',
-          dietAltText: 'DSFDf',
-        },
-        {
-          name: 'Jessie',
-          dietAlt: true,
-          rsvpCeremony: true,
-          rsvpReception: true,
-          rsvpDinner: true,
-          rsvpParty: true,
-          dietMeat: true,
-          dietFish: true,
-          remark: 'sfasdfas',
-          dietAltText: 'sdfsd',
-        },
-      ],
+const defaultRSVPSubmissionSelect =
+  Prisma.validator<Prisma.RSVPSubmissionSelect>()({
+    id: true,
+    email: true,
+    type: true,
+    persons: {
+      select: {
+        id: true,
+        submissionId: true,
+        name: true,
+        dietAlt: true,
+        rsvpCeremony: true,
+        rsvpReception: true,
+        rsvpDinner: true,
+        rsvpParty: true,
+        dietMeat: true,
+        dietFish: true,
+        remark: true,
+        dietAltText: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     },
-  ],
-]);
+  });
 
 export const reactHookFormRouter = router({
   list: publicProcedure.query(async () => {
-    return items;
+    return await prisma.rSVPSubmission.findMany({
+      select: defaultRSVPSubmissionSelect,
+      // get an extra item at the end which we'll use as next cursor
+      take: 10,
+      where: {},
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
   }),
 
   byId: publicProcedure
@@ -58,17 +51,75 @@ export const reactHookFormRouter = router({
       }),
     )
     .query(async ({ input: { id } }) => {
-      return items.get(id);
+      const submission = await prisma.rSVPSubmission.findUnique({
+        where: { id },
+        select: defaultRSVPSubmissionSelect,
+      });
+
+      return submission;
     }),
 
-  upsert: publicProcedure.input(validationSchema).mutation(({ input }) => {
-    const id = input.id || uuid();
-    const item = {
-      ...input,
-      id,
-    };
-    items.set(item.id, item);
+  createOrUpdate: publicProcedure
+    .input(validationSchema)
+    .mutation(async ({ input: { id, ...submission } }) => {
+      if (id) {
+        const update = {
+          ...submission,
+          persons: {
+            deleteMany: {
+              id: {
+                not: {
+                  in: submission.persons.map(({ id }) => id).filter(Boolean),
+                },
+              },
+            },
+            upsert: submission.persons.map((person) => ({
+              where: { id: person.id || uuid() },
+              create: person,
+              update: person,
+            })),
+          },
+        };
 
-    return item;
-  }),
+        const result = await prisma.rSVPSubmission
+          .update({
+            where: {
+              id,
+            },
+            data: update,
+            select: defaultRSVPSubmissionSelect,
+          })
+          .catch((error) => {
+            if (error.code === 'P2025') {
+              return undefined;
+            }
+            throw error;
+          });
+
+        if (result) {
+          return result;
+        }
+      }
+
+      const create = {
+        ...submission,
+        persons: {
+          create: submission.persons.map(({ id, ...person }) => person),
+        },
+      };
+
+      return await prisma.rSVPSubmission
+        .create({
+          data: create,
+          select: defaultRSVPSubmissionSelect,
+        })
+        .then((result) => {
+          sendRSVPMail({
+            id: result.id,
+            email: result.email,
+          });
+
+          return result;
+        });
+    }),
 });

@@ -51,6 +51,7 @@
     "clsx": "^1.2.1",
     "framer-motion": "^10.12.17",
     "next": "^13.4.6",
+    "nodemailer": "^6.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.1",
@@ -61,7 +62,9 @@
   "devDependencies": {
     "@playwright/test": "^1.26.1",
     "@tailwindcss/forms": "^0.5.3",
+    "@total-typescript/ts-reset": "^0.4.2",
     "@types/node": "^18.7.20",
+    "@types/nodemailer": "^6.4.8",
     "@types/react": "^18.0.9",
     "@types/uuid": "^9.0.2",
     "@typescript-eslint/eslint-plugin": "^5.47.0",
