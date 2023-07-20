@@ -70,7 +70,7 @@ const Form: React.FC = () => {
 
   const searchParams = useSearchParams();
   const idSearchParam = searchParams && searchParams.get('id');
-  if (idSearchParam && z.string().uuid().safeParse(id).success) {
+  if (idSearchParam && z.string().uuid().safeParse('id').success) {
     if (idSearchParam !== id) {
       setId(idSearchParam);
     }
