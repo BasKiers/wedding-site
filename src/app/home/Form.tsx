@@ -237,7 +237,7 @@ const Form: React.FC = () => {
           </div>
         </div>
         <div
-          className={`snap-x snap-mandatory mt-6 overflow-y-auto ${
+          className={`mt-6 overflow-y-auto ${
             type.value === undefined ? 'hidden' : ''
           }`}
         >
@@ -249,7 +249,7 @@ const Form: React.FC = () => {
           >
             {fields.map((field, index, arr) => (
               <div
-                className="snap-center w-96 max-w-full h-full p-4 bg-white border border-gray-200 rounded-lg shadow mr-8 relative sm:p-6 h-min flex flex-dir-col"
+                className="w-96 max-w-full h-full p-4 bg-white border border-gray-200 rounded-lg shadow mr-8 relative sm:p-6 flex flex-dir-col"
                 key={field.id}
               >
                 {(index !== 0 || arr.length > 1) && (
