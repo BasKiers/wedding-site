@@ -23,7 +23,7 @@ export const sendMail = (
 ): Promise<SentMessageInfo> => {
   return transporter
     .sendMail({
-      from: `"RSVP Bruiloft Bas & Jessie" <${env.SMTP_SENDER}>`,
+      from: `"Bas & Jessie" <${env.SMTP_SENDER}>`,
       ...options,
     })
     .then((info) => {
@@ -41,7 +41,16 @@ export const sendRSVPMail = (options: { id: string; email: string }) => {
   return sendMail({
     to: options.email,
     subject: 'RSVP bruiloft van Bas & Jessie is ontvangen',
-    text: `Het is gelukt ${options.id}`,
+    text: `Bedankt!
+    
+We hebben jouw RSVP ontvangen.
+Mocht je deze willen wijzigen dan kan dat via onderstaande link
+https://www.basenjessie.nl/rsvp?rsvp=${options.id}`,
+    text: `<span>Bedankt!<span>
+<br />
+<span>We hebben jouw RSVP ontvangen.<span>
+<span>Mocht je deze willen wijzigen dan kan dat via onderstaande link<span>
+<a href="https://www.basenjessie.nl/rsvp?rsvp=${options.id}">https://www.basenjessie.nl/rsvp?rsvp=${options.id}</a>`,
     html: `<span>Het is gelukt ${options.id}</span>`,
   });
 };
