@@ -4,7 +4,7 @@ const Programma: React.FC = () => {
   const tdCls = 'border-b border-slate-100 p-4 pl-8 text-slate-500';
 
   return (
-    <div className="flex flex-row place-content-center min-h-[50%] place-items-center my-auto">
+    <div className="flex flex-row place-content-center min-h-[50%] place-items-center my-auto pointer-events-auto">
       <table className="table-auto border-collapse w-56">
         <tbody>
           <tr>

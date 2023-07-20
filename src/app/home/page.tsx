@@ -242,7 +242,6 @@ const IndexPage: NextPage = () => {
               )}px, 100vw/${MENU_BAR_DIMENSIONS.width}*${
                 MENU_BAR_DIMENSIONS.height
               }*0.6)`,
-              zIndex: 9001,
             }}
             ref={ref}
           >
@@ -259,7 +258,6 @@ const IndexPage: NextPage = () => {
                   MENU_BAR_DIMENSIONS.height
                 }*0.6)`,
                 position: 'relative',
-                zIndex: 9001,
               }}
             >
               <img
@@ -274,9 +272,9 @@ const IndexPage: NextPage = () => {
               <div
                 className={`font-normal text-xl block m-auto w-min cursor-pointer p-5 flex flex-col items-center`}
                 style={{
-                  zIndex: 9002,
                   marginTop: -topHeight / 2,
                   position: 'inherit',
+                  zIndex: 9001,
                 }}
                 onClick={() => router.push('/')}
               >
@@ -310,6 +308,7 @@ const IndexPage: NextPage = () => {
               paddingTop: '20vh',
               paddingBottom: '10vh',
               display: 'flex',
+              pointerEvents: 'none',
             }}
             variants={{
               visible: { y: '-100%' },
@@ -327,6 +326,7 @@ const IndexPage: NextPage = () => {
               paddingTop: '20vh',
               paddingBottom: '10vh',
               display: 'flex',
+              pointerEvents: 'none',
             }}
             variants={{
               visible: { y: '-100%' },
@@ -343,6 +343,7 @@ const IndexPage: NextPage = () => {
             style={{
               paddingTop: 'calc(20vh + 3rem)',
               display: 'flex',
+              pointerEvents: 'none',
             }}
             variants={{
               visible: { y: '-100%' },
@@ -358,8 +359,9 @@ const IndexPage: NextPage = () => {
             className="flex flex-col place-content-between w-full h-full absolute"
             style={{
               paddingTop: '20vh',
-              paddingBottom: '10vh',
+              paddingBottom: '5vh',
               display: 'flex',
+              pointerEvents: 'none',
             }}
             variants={{
               visible: { y: '-100%' },

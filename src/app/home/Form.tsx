@@ -146,8 +146,9 @@ const Form: React.FC = () => {
   };
 
   return (
-    <div className="w-5/6 mx-auto mt-12">
+    <div className="w-5/6 mx-auto h-full pointer-events-auto">
       <form
+        className="h-full flex flex-col"
         onSubmit={handleSubmit(async (data) => {
           const mutationResult = await mutation.mutateAsync(data);
           setId(mutationResult.id);
@@ -236,7 +237,7 @@ const Form: React.FC = () => {
           </div>
         </div>
         <div
-          className={`snap-x snap-mandatory mt-6 ${
+          className={`snap-x snap-mandatory mt-6 overflow-y-auto ${
             type.value === undefined ? 'hidden' : ''
           }`}
         >
