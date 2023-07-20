@@ -73,8 +73,8 @@ export const reactHookFormRouter = router({
                 },
               },
             },
-            upsert: submission.persons.map((person) => ({
-              where: { id: person.id || uuid() },
+            upsert: submission.persons.map(({ id: personId, ...person }) => ({
+              where: { id: personId || uuid() },
               create: person,
               update: person,
             })),
