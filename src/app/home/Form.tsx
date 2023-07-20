@@ -249,7 +249,7 @@ const Form: React.FC = () => {
           >
             {fields.map((field, index, arr) => (
               <div
-                className="snap-center w-96 max-w-full p-4 bg-white border border-gray-200 rounded-lg shadow mr-8 relative sm:p-6 h-min flex flex-dir-col"
+                className="snap-center w-96 max-w-full h-full p-4 bg-white border border-gray-200 rounded-lg shadow mr-8 relative sm:p-6 h-min flex flex-dir-col"
                 key={field.id}
               >
                 {(index !== 0 || arr.length > 1) && (
@@ -424,7 +424,7 @@ const Form: React.FC = () => {
                 </ul>
               </div>
             ))}
-            <div className="w-96 max-w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 flex items-center justify-center">
+            <div className="w-96 max-w-full h-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 flex items-center justify-center">
               <div
                 className="cursor-pointer  flex flex-col h-full justify-between"
                 onClick={() => append(getFormDefaults())}

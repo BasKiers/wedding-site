@@ -375,12 +375,6 @@ const IndexPage: NextPage = () => {
           </motion.div>
         </div>
       </section>
-
-      <section
-        ref={bottomRef}
-        className={`w-full h-screen min-h-fit`}
-        style={{ marginTop: 'calc(100svh - 100lvh)', height: '100svh' }}
-      ></section>
     </>
   );
 };
