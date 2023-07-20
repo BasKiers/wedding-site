@@ -425,12 +425,28 @@ const Form: React.FC = () => {
               </div>
             ))}
             <div className="w-96 max-w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 flex items-center justify-center">
-              <span
-                className="text-9xl cursor-pointer hover:text-gray-600"
+              <div
+                className="cursor-pointer  flex flex-col h-full justify-between"
                 onClick={() => append(getFormDefaults())}
               >
-                ⊕
-              </span>
+                <span className="h-0 text-gray-600">Persoon toevoegen</span>
+                <svg
+                  className="h-32 w-32 text-black hover:text-gray-600"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  {' '}
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />{' '}
+                  <circle cx="8.5" cy="7" r="4" />{' '}
+                  <line x1="20" y1="8" x2="20" y2="14" />{' '}
+                  <line x1="23" y1="11" x2="17" y2="11" />
+                </svg>
+                <span></span>
+              </div>
             </div>
           </div>
         </div>
