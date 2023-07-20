@@ -1,8 +1,8 @@
 'use client';
 
 import { NextPage } from 'next';
-import { motion, useScroll, useTransform, cubicBezier } from 'framer-motion';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
+import { useLayoutEffect, useRef, useState } from 'react';
 // @ts-ignore
 import { useWindowSize } from '@uidotdev/usehooks';
 import MenuItem from '~/app/home/MenuItem';
@@ -13,7 +13,6 @@ import { trpc } from '~/utils/trpc';
 import { usePathname, useRouter } from 'next/navigation';
 import Cadeautips from '~/app/home/Cadeautips';
 
-const SCROLL_DELAY = 600;
 const DURATION = 0.8;
 const TRANSITION = {
   type: 'tween',
@@ -25,14 +24,6 @@ const MENU_BAR_DIMENSIONS = {
   height: 1612,
 };
 
-enum PageEnum {
-  SCHEDULE,
-  LOCATION,
-  RSVP,
-}
-
-let locTimeout: any;
-
 const IndexPage: NextPage = () => {
   const pathname = usePathname();
   const router = useRouter();
@@ -42,10 +33,7 @@ const IndexPage: NextPage = () => {
     0,
     undefined,
   ]);
-  const [page, setPage] = useState<PageEnum | undefined>();
-  const [loc, setLoc] = useState<0 | 1 | 2 | 3>(0);
   const ref = useRef<any>(null);
-  const bottomRef = useRef<any>(null);
 
   useLayoutEffect(() => {
     if (!ref.current?.clientHeight) {
@@ -74,66 +62,11 @@ const IndexPage: NextPage = () => {
         },
       },
     ]);
-  }, [size, ref.current]);
-
-  const { scrollYProgress } = useScroll();
-  // const animateMenuBar = {
-  //   bottom: {
-  //     y: -ref.current?.clientHeight ?? 0,
-  //   },
-  //   top: {
-  //     y: height,
-  //   },
-  // };
-  const menuY = useTransform(scrollYProgress, [0, 0.9], ['0vh', '45vh'], {
-    // ease: cubicBezier(0.68, 0.08, 0.41, 0.95),
-  });
-  const bottomY = useTransform(scrollYProgress, [0, 0.9], ['-20vh', '0vh'], {
-    // ease: cubicBezier(0.68, 0.08, 0.41, 0.95),
-  });
-
-  const handleLocChange = (scrollToTop: boolean) => {
-    clearTimeout(locTimeout);
-    setTimeout(() => {
-      window.requestAnimationFrame(() => {
-        if (scrollToTop) {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          locTimeout = setTimeout(() => {
-            window.requestAnimationFrame(() => setLoc(0));
-          }, SCROLL_DELAY);
-        } else {
-          bottomRef.current?.scrollIntoView({
-            block: 'end',
-            behavior: 'smooth',
-          });
-          locTimeout = setTimeout(
-            () => window.requestAnimationFrame(() => setLoc(2)),
-            SCROLL_DELAY,
-          );
-        }
-      });
-    }, 100);
-  };
-
-  useEffect(() => handleLocChange(page === undefined), [page]);
-
-  const openPage = (pageName: PageEnum | undefined) => () => {
-    router.push('/');
-    if (pageName === undefined) {
-      setLoc(3);
-      handleLocChange(true);
-      return;
-    }
-    setLoc(1);
-    if (pageName === page) {
-      handleLocChange(false);
-    }
-    setPage(pageName);
-  };
+  }, [size, ref]);
 
   return (
     <>
-      <section className={`w-full h-screen ${loc === 2 ? 'hidden' : 'snap'}`}>
+      <section className={`w-full h-screen`}>
         <div className="flex flex-col h-full place-content-between">
           <motion.div
             className={`flex flex-row place-content-center min-h-[50%] place-items-center my-auto`}
