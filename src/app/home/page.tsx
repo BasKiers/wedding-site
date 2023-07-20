@@ -74,7 +74,7 @@ const IndexPage: NextPage = () => {
         },
       },
     ]);
-  }, [size, loc]);
+  }, [size, ref.current]);
 
   const { scrollYProgress } = useScroll();
   // const animateMenuBar = {
