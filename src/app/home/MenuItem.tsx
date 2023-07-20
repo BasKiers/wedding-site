@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 interface MenuItemProps {
   name: string;
-  icon: string;
+  icon: ReactElement;
   onClick: () => any;
 }
 
 const MenuItem: React.FC<MenuItemProps> = ({ name, icon, onClick }) => {
   return (
-    <div className="w-1/5 flex flex-col px-8 cursor-pointer" onClick={onClick}>
-      <div className="m-auto py-8 text-7xl">{icon.trim()}</div>
-      <span className="text-center">{name}</span>
+    <div
+      className="w-1/5 flex flex-col px-8 cursor-pointer items-center"
+      onClick={onClick}
+    >
+      <div style={{ color: '#EBC300' }}>{icon}</div>
+      <span className="text-center text-xl pt-2">{name}</span>
     </div>
   );
 };

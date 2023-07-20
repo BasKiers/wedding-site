@@ -53,13 +53,14 @@ function useZodForm<TSchema extends z.ZodType>(
 
 const Form: React.FC = () => {
   const [id, setId] = useState(() => {
-    const saved = localStorage && localStorage.getItem('rsvp');
+    const saved =
+      (!globalThis || globalThis.localStorage) && localStorage.getItem('rsvp');
     // @ts-ignore
     return (saved && JSON.parse(saved)?.id) || '';
   });
 
   useEffect(() => {
-    if (localStorage && id) {
+    if ((!globalThis || globalThis.localStorage) && id) {
       localStorage.setItem('rsvp', JSON.stringify({ id }));
     }
   }, [id]);
@@ -143,8 +144,6 @@ const Form: React.FC = () => {
     ...getFieldState('type'),
     value: getValues('type'),
   };
-
-  console.log('fieldState', type);
 
   return (
     <div className="w-5/6 mx-auto mt-12">

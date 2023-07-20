@@ -28,4 +28,29 @@ module.exports = getConfig({
   },
   /** We run eslint as a separate task in CI */
   eslint: { ignoreDuringBuilds: !!process.env.CI },
+
+  async rewrites() {
+    return [
+      {
+        source: '/',
+        destination: '/home',
+      },
+      {
+        source: '/programma',
+        destination: '/home',
+      },
+      {
+        source: '/cadeautips',
+        destination: '/home',
+      },
+      {
+        source: '/locatie',
+        destination: '/home',
+      },
+      {
+        source: '/rsvp',
+        destination: '/home',
+      },
+    ];
+  },
 });
