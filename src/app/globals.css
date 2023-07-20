@@ -4,11 +4,11 @@
 
 
 html {
-    scroll-snap-type: y mandatory;
+    overflow-x: hidden
 }
 
 body {
-     overscroll-behavior: none;
+    overscroll-behavior: none;
     overflow: hidden;
  }
 
