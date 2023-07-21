@@ -69,7 +69,7 @@ const IndexPage: NextPage = () => {
       <section className={`w-full h-screen`}>
         <div className="flex flex-col h-full place-content-between">
           <motion.div
-            className={`flex flex-row place-content-center min-h-[50%] place-items-center my-auto`}
+            className={`flex flex-row place-content-center min-h-[50%] max-w-3xl place-items-center m-auto`}
             variants={{
               visible: { y: 0 },
               hidden: { y: '-150%' },

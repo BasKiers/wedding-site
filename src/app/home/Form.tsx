@@ -116,7 +116,7 @@ const Form: React.FC = () => {
     if (rsvp.data) {
       reset(rsvp.data);
     }
-  }, [rsvp.data]);
+  }, [rsvp.data, reset]);
 
   const getFormDefaults = () => {
     const { rsvpCeremony, rsvpReception, rsvpDinner, rsvpParty } =
