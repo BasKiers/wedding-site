@@ -76,9 +76,17 @@ const IndexPage: NextPage = () => {
   return (
     <>
       {!bannerClosed && (
-        <div
+        <motion.div
           className="absolute left-0 right-0 bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md"
           style={{ zIndex: 9002 }}
+          initial={{ y: '-105%' }}
+          animate={{ y: 0 }}
+          transition={{
+            type: 'spring',
+            stiffness: 260,
+            damping: 20,
+            delay: 1,
+          }}
         >
           <div className="flex">
             <div className="py-1">
@@ -127,7 +135,7 @@ const IndexPage: NextPage = () => {
               </svg>
             </div>
           </div>
-        </div>
+        </motion.div>
       )}
       <section className={`w-full h-screen`}>
         <div className="flex flex-col h-full place-content-between">
