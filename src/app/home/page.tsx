@@ -2,7 +2,7 @@
 
 import { NextPage } from 'next';
 import { motion } from 'framer-motion';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 // @ts-ignore
 import { useWindowSize } from '@uidotdev/usehooks';
 import MenuItem from '~/app/home/MenuItem';
@@ -35,6 +35,15 @@ const IndexPage: NextPage = () => {
   ]);
   const ref = useRef<any>(null);
 
+  const [bannerClosed, setBannerClosed] = useState(true);
+
+  useEffect(() => {
+    const saved = globalThis?.localStorage.getItem('banner');
+
+    // @ts-ignore
+    setBannerClosed((saved && JSON.parse(saved)?.invalidEmail) ?? false);
+  }, []);
+
   useLayoutEffect(() => {
     if (!ref.current?.clientHeight) {
       return;
@@ -66,6 +75,60 @@ const IndexPage: NextPage = () => {
 
   return (
     <>
+      {!bannerClosed && (
+        <div
+          className="absolute left-0 right-0 bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md"
+          style={{ zIndex: 9002 }}
+        >
+          <div className="flex">
+            <div className="py-1">
+              <svg
+                className="fill-current h-6 w-6 text-teal-500 mr-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" />
+              </svg>
+            </div>
+            <div>
+              <p className="font-bold">
+                Incorrect email adres gedeeld in uitnodiging
+              </p>
+              <p className="text-sm">
+                Het correcte email voor de getuigen is{' '}
+                <b>getuigen@basenjessie.nl</b>. Heb je al een mail gestuurd,
+                stuur deze dan opnieuw naar het correcte email adres.
+              </p>
+            </div>
+            <div
+              className="py-1 ml-auto cursor-pointer"
+              onClick={() => {
+                (!globalThis || globalThis.localStorage) &&
+                  localStorage.setItem(
+                    'banner',
+                    JSON.stringify({ invalidEmail: true }),
+                  );
+                setBannerClosed(true);
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      )}
       <section className={`w-full h-screen`}>
         <div className="flex flex-col h-full place-content-between">
           <motion.div
