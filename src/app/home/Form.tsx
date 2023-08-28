@@ -31,6 +31,9 @@ export const validationSchema = z.object({
         rsvpParty: z.boolean().default(false),
         dietMeat: z.boolean().default(false),
         dietFish: z.boolean().default(false),
+        dinnerStarter: z.string().optional(),
+        dinnerMain: z.string().optional(),
+        dinnerDesert: z.string().optional(),
         remark: z.string().max(10000).default(''),
         dietAltText: z.string().max(10000).default(''),
       }),
@@ -389,6 +392,209 @@ const Form: React.FC = () => {
                                   />
                                 </div>
                               )}
+                              <div className="">
+                                <label className="block text-gray-500 font-bold mb-1 md:mb-0 pr-4">
+                                  Diner Keuzes
+                                </label>
+                              </div>
+                              <div className="flex flex-col place-content-between mb-2">
+                                <span className="mb-2">Voorgerecht</span>
+                                {persons?.[index]?.dietMeat && (
+                                  <label>
+                                    <input
+                                      {...register(
+                                        `persons.${index}.dinnerStarter`,
+                                      )}
+                                      type="radio"
+                                      value="Vlees"
+                                      id="dinnerStarterVlees"
+                                      className="mx-3"
+                                    />
+                                    <label htmlFor="dinnerStarterVlees">
+                                      Carpaccio
+                                    </label>
+                                    <label
+                                      className="block italic pl-3"
+                                      htmlFor="dinnerStarterVlees"
+                                    >
+                                      met het mes gesneden rundvlees, pitten,
+                                      truffelmayo & oude kaas
+                                    </label>
+                                  </label>
+                                )}
+                                {persons?.[index]?.dietFish && (
+                                  <label>
+                                    <input
+                                      {...register(
+                                        `persons.${index}.dinnerStarter`,
+                                      )}
+                                      type="radio"
+                                      value="Vis"
+                                      id="dinnerStarterVis"
+                                      className="mx-3"
+                                    />
+                                    <label htmlFor="dinnerStarterVis">
+                                      Gerookte zalm
+                                    </label>
+                                    <label
+                                      className="block italic pl-3"
+                                      htmlFor="dinnerStarterVlees"
+                                    >
+                                      citroen aioli, rettich, groene asperge &
+                                      mosterd
+                                    </label>
+                                  </label>
+                                )}
+                                <label>
+                                  <input
+                                    {...register(
+                                      `persons.${index}.dinnerStarter`,
+                                    )}
+                                    type="radio"
+                                    value="Vega"
+                                    id="dinnerStarterVega"
+                                    className="mx-3"
+                                  />
+                                  <label htmlFor="dinnerStarterVega">
+                                    Burrata
+                                  </label>
+                                  <label
+                                    className="block italic pl-3"
+                                    htmlFor="dinnerStarterVlees"
+                                  >
+                                    groene gazpacho, basilicum & pompoenpitten
+                                  </label>
+                                </label>
+                                <span className="mb-2">Hoofdgerecht</span>
+                                {persons?.[index]?.dietMeat && (
+                                  <label>
+                                    <input
+                                      {...register(
+                                        `persons.${index}.dinnerMain`,
+                                      )}
+                                      type="radio"
+                                      value="Vlees"
+                                      id="dinnerMainVlees"
+                                      className="mx-3"
+                                    />
+                                    <label htmlFor="dinnerMainVlees">
+                                      Bavette
+                                    </label>
+                                    <label
+                                      className="block italic pl-3"
+                                      htmlFor="dinnerStarterVlees"
+                                    >
+                                      van de grill met sjalot jus
+                                    </label>
+                                  </label>
+                                )}
+                                {persons?.[index]?.dietFish && (
+                                  <label>
+                                    <input
+                                      {...register(
+                                        `persons.${index}.dinnerMain`,
+                                      )}
+                                      type="radio"
+                                      value="Vis"
+                                      id="dinnerMainVis"
+                                      className="mx-3"
+                                    />
+                                    <label htmlFor="dinnerMainVis">
+                                      Kabeljauw
+                                    </label>
+                                    <label
+                                      className="block italic pl-3"
+                                      htmlFor="dinnerStarterVlees"
+                                    >
+                                      met risotto, doperwten & groene kruiden
+                                      crème
+                                    </label>
+                                  </label>
+                                )}
+                                <label>
+                                  <input
+                                    {...register(`persons.${index}.dinnerMain`)}
+                                    type="radio"
+                                    value="Vega"
+                                    id="dinnerMainVega"
+                                    className="mx-3"
+                                  />
+                                  <label htmlFor="dinnerMainVega">
+                                    Bloemkool steak
+                                  </label>
+                                  <label
+                                    className="block italic pl-3"
+                                    htmlFor="dinnerStarterVlees"
+                                  >
+                                    met kerrie, yoghurt & amandel
+                                  </label>
+                                </label>
+                                <span className="mb-2">Desert</span>
+                                {persons?.[index]?.dietMeat && (
+                                  <label>
+                                    <input
+                                      {...register(
+                                        `persons.${index}.dinnerDesert`,
+                                      )}
+                                      type="radio"
+                                      value="Kaas"
+                                      id="dinnerDesertKaas"
+                                      className="mx-3"
+                                    />
+                                    <label htmlFor="dinnerDesertKaas">
+                                      Kaasplank
+                                    </label>
+                                    <label
+                                      className="block italic pl-3"
+                                      htmlFor="dinnerStarterVlees"
+                                    >
+                                      met garnituur
+                                    </label>
+                                  </label>
+                                )}
+                                {persons?.[index]?.dietFish && (
+                                  <label>
+                                    <input
+                                      {...register(
+                                        `persons.${index}.dinnerDesert`,
+                                      )}
+                                      type="radio"
+                                      value="Chocola"
+                                      id="dinnerDesertChocola"
+                                      className="mx-3"
+                                    />
+                                    <label htmlFor="dinnerDesertChocola">
+                                      Lava cake
+                                    </label>
+                                    <label
+                                      className="block italic pl-3"
+                                      htmlFor="dinnerStarterVlees"
+                                    >
+                                      met vanille ijs & pecan
+                                    </label>
+                                  </label>
+                                )}
+                                <label>
+                                  <input
+                                    {...register(
+                                      `persons.${index}.dinnerDesert`,
+                                    )}
+                                    type="radio"
+                                    value="Ananas"
+                                    id="dinnerDesertAnanas"
+                                    className="mx-3"
+                                  />
+                                  <label htmlFor="dinnerDesertAnanas">
+                                    Tarte tatin
+                                  </label>
+                                  <label
+                                    className="block italic pl-3"
+                                    htmlFor="dinnerStarterVlees"
+                                  >
+                                    van ananas met tijmroomijs
+                                  </label>
+                                </label>
+                              </div>
                             </div>
                           )}
                         </>
