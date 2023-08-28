@@ -11,7 +11,7 @@ import Map from '~/app/home/Map';
 import Form from '~/app/home/Form';
 import { trpc } from '~/utils/trpc';
 import { usePathname, useRouter } from 'next/navigation';
-import Cadeautips from '~/app/home/Cadeautips';
+import CadeauTips from '~/app/home/CadeauTips';
 
 const DURATION = 0.8;
 const TRANSITION = {
@@ -56,7 +56,7 @@ const IndexPage: NextPage = () => {
       MENU_BAR_DIMENSIONS.height;
 
     const topHeight = Math.min(
-      size.height * 0.2,
+      (size.height ?? 0) * 0.2,
       imageHeight * 0.3,
       clientHeight,
     );
@@ -67,7 +67,7 @@ const IndexPage: NextPage = () => {
           y: 0,
         },
         top: {
-          y: -size.height - imageHeight + clientHeight + topHeight,
+          y: -(size.height ?? 0) - imageHeight + clientHeight + topHeight,
         },
       },
     ]);
@@ -312,45 +312,46 @@ const IndexPage: NextPage = () => {
               paddingTop: '20vh',
               paddingBottom: '10vh',
               display: 'flex',
-              pointerEvents: 'none',
+              height: '80vh',
             }}
             variants={{
-              visible: { y: '-100%' },
+              visible: { y: '-125%' },
               hidden: { y: 0 },
             }}
             transition={TRANSITION}
             initial="hidden"
             animate={pathname === '/programma' ? 'visible' : 'hidden'}
           >
-            <Programma />
+            <div style={{ pointerEvents: 'all' }}>
+              <Programma />
+            </div>
           </motion.div>
           <motion.div
             className="flex flex-col place-content-between w-full h-full content-center absolute"
             style={{
-              paddingTop: '20vh',
-              paddingBottom: '10vh',
+              marginTop: '20vh',
               display: 'flex',
-              pointerEvents: 'none',
+              height: '80vh',
             }}
             variants={{
-              visible: { y: '-100%' },
+              visible: { y: '-125%' },
               hidden: { y: 0 },
             }}
             transition={TRANSITION}
             initial="hidden"
             animate={pathname === '/cadeautips' ? 'visible' : 'hidden'}
           >
-            <Cadeautips />
+            <CadeauTips />
           </motion.div>
           <motion.div
             className="flex flex-col place-content-between w-full h-full absolute"
             style={{
-              paddingTop: 'calc(20vh + 3rem)',
+              marginTop: 'calc(20vh + 3rem)',
               display: 'flex',
-              pointerEvents: 'none',
+              height: '80vh',
             }}
             variants={{
-              visible: { y: '-100%' },
+              visible: { y: '-125%' },
               hidden: { y: 0 },
             }}
             transition={TRANSITION}
@@ -362,13 +363,13 @@ const IndexPage: NextPage = () => {
           <motion.div
             className="flex flex-col place-content-between w-full h-full absolute"
             style={{
-              paddingTop: '20vh',
+              marginTop: '20vh',
               paddingBottom: '5vh',
               display: 'flex',
-              pointerEvents: 'none',
+              height: '80vh',
             }}
             variants={{
-              visible: { y: '-100%' },
+              visible: { y: '-125%' },
               hidden: { y: 0 },
             }}
             transition={TRANSITION}
