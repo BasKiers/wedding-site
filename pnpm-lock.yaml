@@ -111,7 +111,7 @@ devDependencies:
     version: 8.6.0(eslint@8.33.0)
   eslint-plugin-prettier:
     specifier: ^4.2.1
-    version: 4.2.1(eslint-config-prettier@8.6.0)(eslint@8.33.0)(prettier@2.8.3)
+    version: 4.2.1(eslint-config-prettier@8.6.0)(eslint@8.33.0)(prettier@3.0.3)
   eslint-plugin-react:
     specifier: ^7.31.11
     version: 7.32.2(eslint@8.33.0)
@@ -125,8 +125,8 @@ devDependencies:
     specifier: ^8.4.24
     version: 8.4.24
   prettier:
-    specifier: ^2.7.1
-    version: 2.8.3
+    specifier: ^3.0.3
+    version: 3.0.3
   prisma:
     specifier: ^4.16.1
     version: 4.16.1
@@ -189,6 +189,7 @@ packages:
 
   /@emotion/memoize@0.7.4:
     resolution: {integrity: sha512-Ja/Vfqe3HpuzRsG1oBtWTHk2PGZ7GR+2Vz5iYGelAw8dx32K0y7PjVuxK6z1nMpZOqAFsRUPCkK1YjJ56qJlgw==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -2080,7 +2081,7 @@ packages:
       semver: 6.3.0
     dev: true
 
-  /eslint-plugin-prettier@4.2.1(eslint-config-prettier@8.6.0)(eslint@8.33.0)(prettier@2.8.3):
+  /eslint-plugin-prettier@4.2.1(eslint-config-prettier@8.6.0)(eslint@8.33.0)(prettier@3.0.3):
     resolution: {integrity: sha512-f/0rXLXUt0oFYs8ra4w49wYZBG5GKZpAYsJSm6rnYL5uVDjd+zowwMwVZHnAjf4edNrKpCDYfXDgmRE/Ak7QyQ==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
@@ -2093,7 +2094,7 @@ packages:
     dependencies:
       eslint: 8.33.0
       eslint-config-prettier: 8.6.0(eslint@8.33.0)
-      prettier: 2.8.3
+      prettier: 3.0.3
       prettier-linter-helpers: 1.0.0
     dev: true
 
@@ -3527,9 +3528,9 @@ packages:
       fast-diff: 1.2.0
     dev: true
 
-  /prettier@2.8.3:
-    resolution: {integrity: sha512-tJ/oJ4amDihPoufT5sM0Z1SKEuKay8LfVAMlbbhnnkvt6BUserZylqo2PN+p9KeljLr0OHa2rXHU1T8reeoTrw==}
-    engines: {node: '>=10.13.0'}
+  /prettier@3.0.3:
+    resolution: {integrity: sha512-L/4pUDMxcNa8R/EthV08Zt42WBO4h1rarVtK0K+QJG0X187OLo7l699jWw0GKuwzkPQ//jMFA/8Xm6Fh3J/DAg==}
+    engines: {node: '>=14'}
     hasBin: true
     dev: true
 
