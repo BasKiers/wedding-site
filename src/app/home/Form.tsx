@@ -31,7 +31,7 @@ export const validationSchema = z.object({
         rsvpParty: z.boolean().default(false),
         dietMeat: z.boolean().default(false),
         dietFish: z.boolean().default(false),
-        dinnerKind: z.boolean().default(false),
+        dinnerKind: z.boolean().optional().default(false),
         dinnerStarter: z.string().nullish(),
         dinnerMain: z.string().nullish(),
         dinnerDesert: z.string().nullish(),
