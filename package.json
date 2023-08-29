@@ -42,7 +42,7 @@
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^15.17.1",
     "@hookform/resolvers": "^3.1.1",
-    "@prisma/client": "^4.16.1",
+    "@prisma/client": "^5.2.0",
     "@tanstack/react-query": "^4.29.14",
     "@trpc/client": "^10.30.0",
     "@trpc/next": "^10.30.0",
