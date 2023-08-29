@@ -25,6 +25,7 @@ const defaultRSVPSubmissionSelect =
         dietFish: true,
         remark: true,
         dietAltText: true,
+        dinnerKind: true,
         dinnerStarter: true,
         dinnerMain: true,
         dinnerDesert: true,

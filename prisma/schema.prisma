@@ -37,8 +37,9 @@ model RSVPPerson {
     remark         String
     dietAltText    String
 
-    dinnerStarter   String?
-    dinnerMain      String?
+    dinnerKind     Boolean @default(false)
+    dinnerStarter  String?
+    dinnerMain     String?
     dinnerDesert   String?
 
     createdAt DateTime @default(now())
