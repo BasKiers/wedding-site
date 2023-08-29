@@ -43,11 +43,13 @@ const CadeauTips = () => {
                           {image &&
                             'fields' in image &&
                             'file' in image.fields && (
-                              <img
-                                className="object-cover w-full rounded-t-lg h-96 md:w-2/6 md:rounded-none md:rounded-l-lg"
-                                src={image.fields.file!.url}
-                                alt=""
-                              />
+                              <div className="h-96 aspect-square">
+                                <img
+                                  className="object-cover w-full rounded-t-lg h-full mx-auto md:rounded-none md:rounded-l-lg"
+                                  src={image.fields.file!.url}
+                                  alt=""
+                                />
+                              </div>
                             )}
                           <div
                             className="flex flex-col justify-between p-4 leading-normal"
