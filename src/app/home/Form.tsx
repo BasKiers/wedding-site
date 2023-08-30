@@ -410,7 +410,7 @@ const Form: React.FC = () => {
                                           null,
                                           undefined,
                                           'Kindermenu',
-                                          'Pasta pesto en een ijsje',
+                                          'Tomatensoep, pasta pesto en een ijsje',
                                         ],
                                       ],
                                     ],
